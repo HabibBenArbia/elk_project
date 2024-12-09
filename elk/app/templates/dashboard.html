@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kibana Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            height: 100vh;
+            margin: 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: #343a40;
+            width: 250px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding-top: 30px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .navbar-brand {
+            color: #ffffff;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding-left: 20px;
+        }
+
+        .sidebar .nav-link {
+            color: #b0bec5;
+            font-weight: 500;
+            padding: 15px 20px;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #ff7043;
+            color: white;
+        }
+
+        .sidebar .nav-item {
+            border-bottom: 1px solid #555;
+        }
+
+        /* Main content area */
+        .content {
+            margin-left: 250px;
+            padding: 30px;
+            width: calc(100% - 250px);
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-container {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 80px);
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            border-radius: 10px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #ff7043;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            background-color: #212121;
+            color: #ffffff;
+            padding: 5rem 0 3rem;
+            margin-top: 50px;
+        }
+
+        .footer h5 {
+            color: #ff7043;
+            font-weight: 700;
+        }
+
+        .footer-links a {
+            color: #b0bec5;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ff7043;
+        }
+
+        .social-links a {
+            display: inline-block;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 45px;
+            margin-right: 15px;
+            transition: background-color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background-color: #ff7043;
+            transform: scale(1.1);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                margin-top: 0;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+
+            .sidebar .nav-link {
+                padding: 10px 15px;
+            }
+
+            .dashboard-container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a class="navbar-brand" href="/"><i class="fas fa-tachometer-alt mr-2"></i>ELK STACK</a>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+        </ul>
+    </div>
+
+    <!-- Main content -->
+    <div class="content">
+        <div class="dashboard-container">
+            <div class="loading-overlay" id="loadingOverlay">
+                <div class="spinner"></div>
+            </div>
+            <iframe 
+                class="dashboard-iframe"
+                src="https://symmetrical-space-carnival-wrr5546q9gqw2g4q6-5601.app.github.dev/app/dashboards#/view/cf28bf50-b614-11ef-82f0-21c621298618?embed=true&_g=(filters:!(),refreshInterval:(pause:!t,value:0),time:(from:now-15m,to:now))&_a=(description:'',filters:!(),fullScreenMode:!f,options:(hidePanelTitles:!f,syncColors:!f,useMargins:!t),panels:!((embeddableConfig:(attributes:(references:!((id:'68dc3d80-b614-11ef-82f0-21c621298618',name:indexpattern-datasource-current-indexpattern,type:index-pattern),(id:'68dc3d80-b614-11ef-82f0-21c621298618',name:indexpattern-datasource-layer-69a22c12-205c-451e-bad3-eabe2807383f,type:index-pattern)),state:(datasourceStates:(indexpattern:(layers:('69a22c12-205c-451e-bad3-eabe2807383f':(columnOrder:!(c47ddf8b-5a04-43c9-a330-9821bc447d60,'06397835-ce2d-48bd-8d97-c6028b2877c2',b5a81d52-21fd-4df9-abe6-5a3eb9cb1d13),columns:('06397835-ce2d-48bd-8d97-c6028b2877c2':(dataType:string,isBucketed:!t,label:'Top%20values%20of%20message.keyword',operationType:terms,params:(missingBucket:!f,orderBy:(columnId:b5a81d52-21fd-4df9-abe6-5a3eb9cb1d13,type:column),orderDirection:desc,otherBucket:!t,size:3),scale:ordinal,sourceField:message.keyword),b5a81d52-21fd-4df9-abe6-5a3eb9cb1d13:(dataType:number,isBucketed:!f,label:'Count%20of%20records',operationType:count,scale:ratio,sourceField:Records),c47ddf8b-5a04-43c9-a330-9821bc447d60:(dataType:string,isBucketed:!t,label:'Top%20values%20of%20Username.keyword',operationType:terms,params:(missingBucket:!f,orderBy:(columnId:b5a81d52-21fd-4df9-abe6-5a3eb9cb1d13,type:column),orderDirection:desc,otherBucket:!t,size:5),scale:ordinal,sourceField:Username.keyword)),incompleteColumns:())))),filters:!(),query:(language:kuery,query:''),visualization:(axisTitlesVisibilitySettings:(x:!t,yLeft:!t,yRight:!t),fittingFunction:None,gridlinesVisibilitySettings:(x:!t,yLeft:!t,yRight:!t),labelsOrientation:(x:0,yLeft:0,yRight:0),layers:!((accessors:!(b5a81d52-21fd-4df9-abe6-5a3eb9cb1d13),layerId:'69a22c12-205c-451e-bad3-eabe2807383f',layerType:data,position:top,seriesType:bar_stacked,showGridlines:!f,splitAccessor:'06397835-ce2d-48bd-8d97-c6028b2877c2',xAccessor:c47ddf8b-5a04-43c9-a330-9821bc447d60)),legend:(isVisible:!t,position:right),preferredSeriesType:bar_stacked,tickLabelsVisibilitySettings:(x:!t,yLeft:!t,yRight:!t),valueLabels:hide,yLeftExtent:(mode:full),yRightExtent:(mode:full))),title:'',type:lens,visualizationType:lnsXY),enhancements:()),gridData:(h:15,i:'7ba65cf3-5d11-4eaa-a61c-ea05a56b188d',w:24,x:0,y:0),panelIndex:'7ba65cf3-5d11-4eaa-a61c-ea05a56b188d',type:lens)"
+                title="Kibana Dashboard"
+                onload="document.getElementById('loadingOverlay').style.display = 'none';"
+            ></iframe>
+        </div>
+    </div>
+
+  
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

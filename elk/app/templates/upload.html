@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CSV</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --footer-bg: #1a252f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: var(--primary-color);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            margin: 0 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-color) !important;
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            padding: 3rem 0;
+            min-height: calc(100vh - 400px);
+        }
+
+        .upload-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .upload-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .upload-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .upload-zone {
+            border: 3px dashed #dee2e6;
+            border-radius: 15px;
+            padding: 3.5rem;
+            text-align: center;
+            margin: 2rem 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f8f9fa;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-zone::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .upload-zone:hover::after {
+            transform: translateX(100%);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--secondary-color);
+            background-color: #edf2f7;
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-upload {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            border: none;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .btn-upload:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        #fileInfo {
+            padding: 1rem;
+            border-radius: 10px;
+            background-color: #e8f4fd;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-chart-line mr-2"></i>Data Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home mr-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard"><i class="fas fa-chart-bar mr-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search"><i class="fas fa-search mr-1"></i> Search</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="upload-container">
+            <div class="upload-card">
+                <h2 class="text-center mb-4">
+                    <i class="fas fa-cloud-upload-alt mr-2" style="color: var(--secondary-color);"></i>
+                    Upload Your CSV File
+                </h2>
+                <p class="text-center text-muted mb-4">Select or drag & drop your CSV file to analyze the data</p>
+                <form action="/upload" method="post" enctype="multipart/form-data">
+                    <div class="upload-zone" id="dropZone">
+                        <i class="fas fa-file-csv upload-icon"></i>
+                        <h4>Drag & Drop your file here</h4>
+                        <p class="text-muted">or click to browse</p>
+                        <input type="file" name="file" id="file" accept=".csv" class="form-control-file" required style="display: none;">
+                    </div>
+                    <div id="fileInfo" class="text-center">
+                        <i class="fas fa-file-alt mr-2"></i>
+                        <span id="fileName"></span>
+                    </div>
+                    <button type="submit" class="btn btn-upload">
+                        <i class="fas fa-upload mr-2"></i>Upload File
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h5>About Us</h5>
+                    <div class="social-links mt-3">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h5>Quick Links</h5>
+                    <ul class="footer-links">
+                        <li><a href="/"><i class="fas fa-chevron-right mr-2"></i>Home</a></li>
+                        <li><a href="/dashboard"><i class="fas fa-chevron-right mr-2"></i>Dashboard</a></li>
+                        <li><a href="/search"><i class="fas fa-chevron-right mr-2"></i>Search</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right mr-2"></i>Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h5>Contact Us</h5>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope mr-2"></i>ramzi@gmail.com</li>
+                        <li><i class="fas fa-phone mr-2"></i>+216 20 851 813</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Data Dashboard. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('file');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileNameSpan = document.getElementById('fileName');
+
+        // Handle file selection
+        fileInput.addEventListener('change', handleFileSelect);
+        
+        // Handle drag and drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#3498db'; // Utiliser la valeur directe au lieu de var()
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.style.borderColor = '#dee2e6';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect();
+            }
+        });
+
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Améliorer la gestion des erreurs dans handleFileSelect
+        function handleFileSelect() {
+            try {
+                const file = fileInput.files[0];
+                if (file) {
+                    if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+                        alert('Please select a CSV file');
+                        fileInput.value = '';
+                        return;
+                    }
+                    
+                    fileNameSpan.textContent = file.name;
+                    fileInfo.style.display = 'block';
+                    dropZone.innerHTML = `
+                        <i class="fas fa-check-circle upload-icon" style="color: #2ecc71;"></i>
+                        <h4 style="color: #2ecc71;">File Selected</h4>
+                        <p class="text-muted">${file.name}</p>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error handling file selection:', error);
+                alert('An error occurred while processing the file');
+            }
+        }
+    </script>
+</body>
+</html>
